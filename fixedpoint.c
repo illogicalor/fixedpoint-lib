@@ -8,7 +8,7 @@
  */
 
 /***** Includes *****/
-#include "fixedpoin.h"
+#include "fixedpoint.h"
 
 /***** Error checking *****/
 #if ( FBITS == 0 && IBITS == 0 )
@@ -16,7 +16,7 @@
 #endif
 
 /***** Definitions *****/
-#define Q_ONE   ( 1 << FBITS )
+#define Q_ONE         ( 1 << FBITS )
 
 /***** Local Variables *****/
 static int overflow = 0;

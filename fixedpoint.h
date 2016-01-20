@@ -40,13 +40,16 @@ typedef int64_t sfixed_t;
 #error "Data type greater than 64-bits not supported."
 #endif
 
+// For debug purposes
+#define str( s )              #s
+#define QFORMAT_STR( i, f )   "Q" str(i) "." str(f)
+
 /***** Function Prototypes *****/
 // Overflow functions
 int fixedpoint_did_overflow( void );
 void fixedpoint_clear_overflow( void );
 
 // Math functions
-
 
 // Utility functions
 
