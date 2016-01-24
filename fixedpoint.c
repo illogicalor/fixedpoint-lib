@@ -9,9 +9,7 @@
 
 /***** Includes *****/
 #include "fixedpoint.h"
-#if ( defined OVERFLOW_SUPPORT && OVERFLOW_SUPPORT == 1 )
-#include <limits.h> // Requred if doing overflow check.
-#endif
+#include <limits.h> // Requred for overflow check.
 
 /***** Error checking *****/
 #if ( FBITS == 0 || IBITS == 0 )
@@ -24,7 +22,7 @@
 /***** Definitions *****/
 
 /***** Local Variables *****/
-#if ( defined FIXEDPOINT_INLINE_OP && FIXEDPOINT_INLINE_OP != 1 )
+#if ( defined FIXEDPOINT_INLINE_OP && FIXEDPOINT_INLINE_OP == 0 )
 static int overflow = 0;
 
 /***** Function Definitions *****/
@@ -56,10 +54,8 @@ ufixed_t q_uadd( ufixed_t a, ufixed_t b )
 {
   ufixed_t result = a + b;
 
-#if defined OVERFLOW_SUPPORT && OVERFLOW_SUPPORT == 1
   // Check if an overflow occurred.
   //if ( result 
-#endif /* OVERFLOW_SUPPORT */
 
   // Return the result
   return result;
@@ -75,10 +71,8 @@ sfixed_t q_sadd( sfixed_t a, sfixed_t b )
 {
   sfixed_t result = a + b;
 
-#if defined OVERFLOW_SUPPORT && OVERFLOW_SUPPORT == 1
   // Check if an overflow occurred.
   //if ( result 
-#endif /* OVERFLOW_SUPPORT */
 
   // Return the result
   return result;

@@ -29,11 +29,6 @@
 #define FIXEDPOINT_INLINE_OP    1
 
 //
-// Configure whether we want overflow support
-//
-#define OVERFLOW_SUPPORT        1
-
-//
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // !! --- Remaining code should not be modified --- !!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -45,9 +40,19 @@
 #define Q_ONE         ( (ufixed_t)1 << FBITS )
 
 //
-// Size of the fixed-point interger in bits
+// Convert integer to fixed point
 //
-#define FIXEDPOINT_SIZE   ( IBITS + FBITS )
+#define Z_TO_Q( z )   ( (z) << FBITS )
+
+//
+// Convert fixed point to integer
+//
+#define Q_TO_Z( q )   ( (q) >> FBITS )
+
+//
+// Get the fractional bits from a fixed-point number.
+//
+#define Q_FRAC( q )   ( (q) & ( Q_ONE - 1 ) )
 
 //
 // Convert float literal to fixed point
@@ -57,13 +62,14 @@
 
 //
 // Convert fixed point to float
-// Warning: 
+// Warning: compiler must support float in order to use this.
 //
 #define Q_TO_FLOAT( fixed )         ( ((float)fixed) / Q_ONE )
 
 //
-// Define the data type
+// Define the data type based on the fixed point size in bits
 //
+#define FIXEDPOINT_SIZE   ( IBITS + FBITS )
 #if ( FIXEDPOINT_SIZE <= 8 )
 typedef uint8_t   ufixed_t;
 typedef int8_t    sfixed_t;
@@ -118,10 +124,10 @@ typedef int64_t   sfixed_t;
 #define q_sadd( a, b )  ( (sfixed_t)(a) + (sfixed_t)(b) )
 #define q_usub( a, b )  ( (ufixed_t)(a) - (ufixed_t)(b) )
 #define q_ssub( a, b )  ( (sfixed_t)(a) - (sfixed_t)(b) )
+#if ( FIXEDPOINT_SIZE <= 32 )
+// Only define multiply/divide functions if data size is not greater than 32 bits.
 #define q_umul( a, b )  ( (ufixed_t)( (ufixed_temp_t)(a) * (ufixed_temp_t)(b) >> FBITS ) )
 #define q_smul( a, b )  ( (sfixed_t)( (sfixed_temp_t)(a) * (sfixed_temp_t)(b) >> FBITS ) )
-#if ( FIXEDPOINT_SIZE <= 32 )
-// Only define divide functions if data size is not greater than 32 bits.
 #define q_udiv( a, b )  ( (ufixed_t)( ( (ufixed_temp_t)(a) << FBITS ) / (ufixed_t)(b) ) )
 #define q_sdiv( a, b )  ( (sfixed_t)( ( (sfixed_temp_t)(a) << FBITS ) / (sfixed_t)(b) ) )
 #endif /* FIXEDPOINT_SIZE <= 32 */
@@ -131,10 +137,8 @@ typedef int64_t   sfixed_t;
 //
 // Overflow functions
 //
-#if ( defined OVERFLOW_SUPPORT && OVERFLOW_SUPPORT == 1 )
 int fixedpoint_did_overflow( void );
 void fixedpoint_clear_overflow( void );
-#endif /* OVERFLOW_SUPPORT */
 
 //
 // Math functions
@@ -143,17 +147,14 @@ ufixed_t q_uadd( ufixed_t a, ufixed_t b );
 sfixed_t q_sadd( sfixed_t a, sfixed_t b );
 ufixed_t q_usub( ufixed_t a, ufixed_t b );
 sfixed_t q_ssub( sfixed_t a, sfixed_t b );
+#if ( FIXEDPOINT_SIZE <= 32 )
+// Only define multiply/divide functions if data size is not greater than 32 bits.
 ufixed_t q_umul( ufixed_t a, ufixed_t b );
 sfixed_t q_smul( sfixed_t a, sfixed_t b );
-#if ( FIXEDPOINT_SIZE <= 32 )
-// Only define divide functions if data size is not greater than 32 bits.
 ufixed_t q_udiv( ufixed_t a, ufixed_t b );
 sfixed_t q_sdiv( sfixed_t a, sfixed_t b );
 #endif /* FIXEDPOINT_SIZE <= 32 */
 
-//
-// Utility functions
-//
 #endif /* FIXEDPOINT_INLINE_OP */
 
 #endif /* __FIXEDPOINT_H__ */
