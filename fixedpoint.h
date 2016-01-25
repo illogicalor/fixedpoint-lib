@@ -22,9 +22,8 @@
 #define FBITS   16  // Fractional bits
 
 //
-// Configure whether we want inline operations to minimize code
-// footprint i.e. no function calls; will need to do error
-// checking MANUALLY.
+// Configure whether we want inline operations to reduce
+// function calls; will need to do error checking MANUALLY.
 //
 #define FIXEDPOINT_INLINE_OP    0
 
