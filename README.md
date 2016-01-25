@@ -14,4 +14,5 @@ inline. Enabling FIXEDPOINT\_INLINE\_OP allows for simpicity and smaller code
 footprint. However, no error checks are done (e.g. overflows) so those will need
 to be done manually in this mode.
 
+## Description of the provided mathematical operations
 
