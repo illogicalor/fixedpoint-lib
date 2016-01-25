@@ -35,6 +35,13 @@
 //
 
 //
+// Error codes
+//
+#define FIXEDPOINT_NO_ERROR       0
+#define OVERFLOW_OCCURRED_ERROR   1
+#define DIVIDE_BY_ZERO_ERROR      2
+
+//
 // The equivalent of 1.0 in fixed point
 //
 #define Q_ONE         ( (ufixed_t)1 << FBITS )
@@ -62,7 +69,7 @@
 
 //
 // Convert fixed point to float
-// Warning: compiler must support float in order to use this.
+// @warning: compiler must support float in order to use this macro.
 //
 #define Q_TO_FLOAT( fixed )         ( ((float)fixed) / Q_ONE )
 
@@ -126,8 +133,8 @@ typedef int64_t   sfixed_t;
 //
 // Overflow functions (undefined)
 //
-#define fixedpoint_did_overflow()
-#define fixedpoint_clear_overflow()
+#define fixedpoint_get_error()
+#define fixedpoint_clear_error()
 
 //
 // Math functions
@@ -149,8 +156,8 @@ typedef int64_t   sfixed_t;
 //
 // Overflow functions
 //
-int fixedpoint_did_overflow( void );
-void fixedpoint_clear_overflow( void );
+int fixedpoint_get_error( void );
+void fixedpoint_clear_error( void );
 
 //
 // Math functions

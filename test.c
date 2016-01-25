@@ -132,12 +132,12 @@ int main( int argc, char *argv[] )
   // 
   puts( "Overflow (unsigned fixed-point addition)" );
   u_result = q_uadd( UFIXED_MAX, u_fixed1 );
-  if ( fixedpoint_did_overflow() )
+  if ( fixedpoint_get_error() == OVERFLOW_OCCURRED_ERROR )
   {
     printf( "  !!! OVERFLOW OCCURED !!!\r\n" );
     printf( "  q_uadd( UQ_LITERAL(%f), UQ_LITERAL(%f) ) = %u\r\n", Q_TO_FLOAT( UFIXED_MAX ), u_f1, u_result );
     printf( "  Q_TO_FLOAT(%u) = %f\r\n", u_result, Q_TO_FLOAT( u_result ) );
-    fixedpoint_clear_overflow();
+    fixedpoint_clear_error();
   }
   else
   {
@@ -147,12 +147,12 @@ int main( int argc, char *argv[] )
 
   puts( "Overflow (signed fixed-point addition: two positive numbers)" );
   s_result = q_sadd( SFIXED_MAX, u_fixed1 );
-  if ( fixedpoint_did_overflow() )
+  if ( fixedpoint_get_error() == OVERFLOW_OCCURRED_ERROR )
   {
     printf( "  !!! OVERFLOW OCCURED !!!\r\n" );
     printf( "  q_uadd( SQ_LITERAL(%f), SQ_LITERAL(%f) ) = %u\r\n", Q_TO_FLOAT( SFIXED_MAX ), u_f1, s_result );
     printf( "  Q_TO_FLOAT(%u) = %f\r\n", s_result, Q_TO_FLOAT( s_result ) );
-    fixedpoint_clear_overflow();
+    fixedpoint_clear_error();
   }
   else
   {
@@ -162,12 +162,12 @@ int main( int argc, char *argv[] )
 
   puts( "Overflow (signed fixed-point addition: two negative numbers)" );
   s_result = q_sadd( SFIXED_MIN, s_fixed1 );
-  if ( fixedpoint_did_overflow() )
+  if ( fixedpoint_get_error() == OVERFLOW_OCCURRED_ERROR )
   {
     printf( "  !!! OVERFLOW OCCURED !!!\r\n" );
     printf( "  q_uadd( SQ_LITERAL(%f), SQ_LITERAL(%f) ) = %u\r\n", Q_TO_FLOAT( SFIXED_MIN ), s_f1, s_result );
     printf( "  Q_TO_FLOAT(%u) = %f\r\n", s_result, Q_TO_FLOAT( s_result ) );
-    fixedpoint_clear_overflow();
+    fixedpoint_clear_error();
   }
   else
   {

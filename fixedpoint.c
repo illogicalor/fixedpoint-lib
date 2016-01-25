@@ -22,28 +22,31 @@
 
 /***** Local Variables *****/
 #if ( defined FIXEDPOINT_INLINE_OP && FIXEDPOINT_INLINE_OP == 0 )
-static int overflow = 0;
+static int error = 0;
 
 /***** Function Definitions *****/
 // ---------- Overflow Functions ----------
 /**
- *  @brief  Returns the overflow flag determining whether the last
- *          operation overflowed.
- *          See http://www.doc.ic.ac.uk/~eedwards/compsys/arithmetic/ for
+ *  @brief  Returns the error determining whether the last
+ *          operation produced an error.
+ *  @notes  See http://www.doc.ic.ac.uk/~eedwards/compsys/arithmetic/ for
  *          details on overflow with signed integers.
- *  @return Overflow flag.
+ *  @return Error byte, either one of:
+ *          @ref FIXEDPOINT_NO_ERROR
+ *          @ref OVERFLOW_OCCURRED_ERROR
+ *          @ref DIVIDE_BY_ZERO_ERROR
  */
-int fixedpoint_did_overflow( void )
+int fixedpoint_get_error( void )
 {
-  return overflow;
+  return error;
 }
 
 /**
- *  @brief  Clear the overflow flag.
+ *  @brief  Clear the error byte.
  */
-void fixedpoint_clear_overflow( void )
+void fixedpoint_clear_error( void )
 {
-  overflow = 0;
+  error = FIXEDPOINT_NO_ERROR;
 }
 
 // ---------- Addition Functions ----------
@@ -51,7 +54,8 @@ void fixedpoint_clear_overflow( void )
  *  @brief  Add two unsigned fixed-point numbers.
  *  @param  a - Unsigned fixed-point number
  *  @param  b - Unsigned fixed`point number
- *  @return Result of a + b. Set overflow flag is overflow occurs.
+ *  @return Result of a + b. Set error to @ref OVERFLOW_OCCURRED_ERROR if
+ *          overflow occurs.
  */
 ufixed_t q_uadd( ufixed_t a, ufixed_t b )
 {
@@ -60,7 +64,7 @@ ufixed_t q_uadd( ufixed_t a, ufixed_t b )
   // Check if an overflow occurred.
   if ( a > UFIXED_MAX - b )
   {
-    overflow = 1;
+    error = OVERFLOW_OCCURRED_ERROR;
   }
 
   return result;
@@ -70,7 +74,8 @@ ufixed_t q_uadd( ufixed_t a, ufixed_t b )
  *  @brief  Add two signed fixed-point numbers.
  *  @param  a - Signed fixed-point number
  *  @param  b - Signed fixed-point number
- *  @return Result of a + b. Set overflow flag is overflow occurs.
+ *  @return Result of a + b. Set error to @ref OVERFLOW_OCCURRED_ERROR if
+ *          overflow occurs.
  */
 sfixed_t q_sadd( sfixed_t a, sfixed_t b )
 {
@@ -83,7 +88,7 @@ sfixed_t q_sadd( sfixed_t a, sfixed_t b )
   {
     if ( ( a < 0 && result > 0 ) || ( a > 0 && result < 0 ) )
     {
-      overflow = 1;
+      error = OVERFLOW_OCCURRED_ERROR;
     }
   }
 
@@ -96,7 +101,8 @@ sfixed_t q_sadd( sfixed_t a, sfixed_t b )
  *  @brief  Subtract two unsigned fixed-point numbers.
  *  @param  a - Unsigned fixed-point number
  *  @param  b - Unsigned fixed`point number
- *  @return Result of a - b. Set overflow flag is overflow occurs.
+ *  @return Result of a - b. Set error to @ref OVERFLOW_OCCURRED_ERROR if
+ *          overflow occurs.
  */
 ufixed_t q_usub( ufixed_t a, ufixed_t b )
 {
@@ -105,7 +111,7 @@ ufixed_t q_usub( ufixed_t a, ufixed_t b )
   // Check if an overflow occurred.
   if ( b > a )
   {
-    overflow = 1;
+    error = OVERFLOW_OCCURRED_ERROR;
   }
 
   return result;
@@ -115,7 +121,8 @@ ufixed_t q_usub( ufixed_t a, ufixed_t b )
  *  @brief  Subtract two signed fixed-point numbers.
  *  @param  a - Signed fixed-point number
  *  @param  b - Signed fixed-point number
- *  @return Result of a - b. Set overflow flag is overflow occurs.
+ *  @return Result of a - b. Set error to @ref OVERFLOW_OCCURRED_ERROR if
+ *          overflow occurs.
  */
 sfixed_t q_ssub( sfixed_t a, sfixed_t b )
 {
@@ -128,7 +135,7 @@ sfixed_t q_ssub( sfixed_t a, sfixed_t b )
     // If result and b have the same sign, an overflow occurred.
     if ( ( result < 0 && b < 0 ) || ( result > 0 && b > 0 ) )
     {
-      overflow = 1;
+      error = OVERFLOW_OCCURRED_ERROR;
     }
   }
 
@@ -142,7 +149,8 @@ sfixed_t q_ssub( sfixed_t a, sfixed_t b )
  *  @brief  Multiply two unsigned fixed-point numbers.
  *  @param  a - Unsigned fixed-point number
  *  @param  b - Unsigned fixed`point number
- *  @return Result of a - b. Set overflow flag is overflow occurs.
+ *  @return Result of a * b. Set error to @ref OVERFLOW_OCCURRED_ERROR if
+ *          overflow occurs.
  */
 ufixed_t q_umul( ufixed_t a, ufixed_t b )
 {
@@ -151,7 +159,7 @@ ufixed_t q_umul( ufixed_t a, ufixed_t b )
   // Check if an overflow occurred.
   if ( result & UFIXED_MAX )
   {
-    overflow = 1;
+    error = OVERFLOW_OCCURRED_ERROR;
   }
 
   return (ufixed_t)result;
@@ -161,7 +169,8 @@ ufixed_t q_umul( ufixed_t a, ufixed_t b )
  *  @brief  Multiply two signed fixed-point numbers.
  *  @param  a - Signed fixed-point number
  *  @param  b - Signed fixed-point number
- *  @return Result of a - b. Set overflow flag is overflow occurs.
+ *  @return Result of a * b. Set error to @ref OVERFLOW_OCCURRED_ERROR if
+ *          overflow occurs.
  */
 sfixed_t q_smul( sfixed_t a, sfixed_t b )
 {
@@ -170,7 +179,7 @@ sfixed_t q_smul( sfixed_t a, sfixed_t b )
   // Check if an overflow occurred.
   if ( result > SFIXED_MAX || result < SFIXED_MIN )
   {
-    overflow = 1;
+    error = OVERFLOW_OCCURRED_ERROR;
   }
 
   // Return the result
@@ -182,15 +191,20 @@ sfixed_t q_smul( sfixed_t a, sfixed_t b )
  *  @brief  Division two unsigned fixed-point numbers.
  *  @param  a - Unsigned fixed-point number
  *  @param  b - Unsigned fixed`point number
- *  @return Result of a - b. Set overflow flag is overflow occurs.
+ *  @return Result of a / b. Set error to @ref DIVIDE_BY_ZERO_ERROR if
+ *          overflow occurs.
  */
 ufixed_t q_udiv( ufixed_t a, ufixed_t b )
 {
-  ufixed_t result = a * b;
+  // Check for divide-by-zero
+  if ( b == 0 )
+  {
+    error = DIVIDE_BY_ZERO_ERROR;
+    return 0;
+  }
 
-  // Check if an overflow occurred.
-  //
-
+  // Otherwise, calculate and return.
+  ufixed_t result = ( (ufixed_temp_t)a << FBITS ) / (ufixed_temp_t)b;
   return result;
 }
 
@@ -198,16 +212,20 @@ ufixed_t q_udiv( ufixed_t a, ufixed_t b )
  *  @brief  Division two signed fixed-point numbers.
  *  @param  a - Signed fixed-point number
  *  @param  b - Signed fixed-point number
- *  @return Result of a - b. Set overflow flag is overflow occurs.
+ *  @return Result of a / b. Set error to @ref DIVIDE_BY_ZERO_ERROR if
+ *          overflow occurs.
  */
 sfixed_t q_sdiv( sfixed_t a, sfixed_t b )
 {
-  sfixed_t result = a * b;
+  // Check for divide-by-zero
+  if ( b == 0 )
+  {
+    error = DIVIDE_BY_ZERO_ERROR;
+    return 0;
+  }
 
-  // Check if an overflow occurred.
-  //
-
-  // Return the result
+  // Otherwise, calculate and return.
+  sfixed_t result = ( (sfixed_temp_t)a << FBITS ) / (sfixed_temp_t)b;
   return result;
 }
 #endif /* FIXEDPOINT_SIZE <= 32  */
