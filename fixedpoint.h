@@ -26,7 +26,7 @@
 // footprint i.e. no function calls; will need to do error
 // checking MANUALLY.
 //
-#define FIXEDPOINT_INLINE_OP    1
+#define FIXEDPOINT_INLINE_OP    0
 
 //
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -75,20 +75,32 @@ typedef uint8_t   ufixed_t;
 typedef int8_t    sfixed_t;
 typedef uint16_t  ufixed_temp_t;  // Used for intermediate steps in mult/div calculations
 typedef int16_t   sfixed_temp_t;  // Used for intermediate steps in mult/div calculations
+#define UFIXED_MAX  ( 255 )
+#define SFIXED_MAX  ( 127 )
+#define SFIXED_MIN  ( -127 )
 #elif ( FIXEDPOINT_SIZE <= 16 )
 typedef uint16_t  ufixed_t;
 typedef int16_t   sfixed_t;
 typedef uint32_t  ufixed_temp_t;  // Used for intermediate steps in mult/div calculations
 typedef int32_t   sfixed_temp_t;  // Used for intermediate steps in mult/div calculations
+#define UFIXED_MAX  ( 65535 )
+#define SFIXED_MAX  ( 32767 )
+#define SFIXED_MIN  ( -32767 )
 #elif ( FIXEDPOINT_SIZE <= 32 )
 typedef uint32_t  ufixed_t;
 typedef int32_t   sfixed_t;
 typedef uint64_t  ufixed_temp_t;  // Used for intermediate steps in mult/div calculations
 typedef int64_t   sfixed_temp_t;  // Used for intermediate steps in mult/div calculations
+#define UFIXED_MAX  ( 4294967295 )
+#define SFIXED_MAX  ( 2147483647 )
+#define SFIXED_MIN  ( -2147483647 )
 #elif ( FIXEDPOINT_SIZE <= 64 )
 // Warning: Only addition and subtraction are supported in this mode
 typedef uint64_t  ufixed_t;
 typedef int64_t   sfixed_t;
+#define UFIXED_MAX  ( 18446744073709551615 )
+#define SFIXED_MAX  ( 9223372036854775807 )
+#define SFIXED_MIN  ( -9223372036854775807 )
 #else
 #error "Data type greater than 64-bits not supported."
 #endif
