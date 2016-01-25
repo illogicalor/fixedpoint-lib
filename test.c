@@ -85,7 +85,6 @@ int main( int argc, char *argv[] )
   printf( "  Q_TO_FLOAT(%u) = %f\r\n", s_result, Q_TO_FLOAT( s_result ) );
   puts("");
 
-#if 0
   //
   // Unsigned multiplication
   //
@@ -124,7 +123,6 @@ int main( int argc, char *argv[] )
   printf( "  q_sdiv( SQ_LITERAL(%f), SQ_LITERAL(%f) ) = %u (%f)\r\n", s_f2, s_f1, s_result, s_f2 / s_f1 );
   printf( "  Q_TO_FLOAT(%u) = %f\r\n", s_result, Q_TO_FLOAT( s_result ) );
   puts("");
-#endif
 
 #if ( defined FIXEDPOINT_INLINE_OP && FIXEDPOINT_INLINE_OP == 0 )
   // 
