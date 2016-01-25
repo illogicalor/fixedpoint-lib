@@ -146,12 +146,15 @@ sfixed_t q_ssub( sfixed_t a, sfixed_t b )
  */
 ufixed_t q_umul( ufixed_t a, ufixed_t b )
 {
-  ufixed_t result = ( (ufixed_temp_t)a * (ufixed_temp_t)b ) >> FBITS;
+  ufixed_temp_t result = ( (ufixed_temp_t)a * (ufixed_temp_t)b ) >> FBITS;
 
   // Check if an overflow occurred.
-  //
+  if ( result & UFIXED_MAX )
+  {
+    overflow = 1;
+  }
 
-  return result;
+  return (ufixed_t)result;
 }
 
 /**
@@ -162,13 +165,16 @@ ufixed_t q_umul( ufixed_t a, ufixed_t b )
  */
 sfixed_t q_smul( sfixed_t a, sfixed_t b )
 {
-  sfixed_t result = ( (sfixed_temp_t)a * (sfixed_temp_t)b ) >> FBITS;
+  sfixed_temp_t result = ( (sfixed_temp_t)a * (sfixed_temp_t)b ) >> FBITS;
 
   // Check if an overflow occurred.
-  //
+  if ( result > SFIXED_MAX || result < SFIXED_MIN )
+  {
+    overflow = 1;
+  }
 
   // Return the result
-  return result;
+  return (sfixed_t)result;
 }
 
 // ---------- Division Functions ----------
