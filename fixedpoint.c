@@ -62,7 +62,7 @@ ufixed_t q_uadd( ufixed_t a, ufixed_t b )
   ufixed_t result = a + b;
 
   // Check if an overflow occurred.
-  if ( a > ( ( 1 << FIXEDPOINT_SIZE ) - 1 ) - b )
+  if ( a > ( ( 1UL << FIXEDPOINT_SIZE ) - 1 ) - b )
   {
     error = OVERFLOW_OCCURRED_ERROR;
   }
@@ -157,7 +157,7 @@ ufixed_t q_umul( ufixed_t a, ufixed_t b )
   ufixed_temp_t result = ( (ufixed_temp_t)a * (ufixed_temp_t)b ) >> FBITS;
 
   // Check if an overflow occurred.
-  if ( result & ( ( 1 << FIXEDPOINT_SIZE ) - 1 ) )
+  if ( result & ( ( 1UL << FIXEDPOINT_SIZE ) - 1 ) )
   {
     error = OVERFLOW_OCCURRED_ERROR;
   }
