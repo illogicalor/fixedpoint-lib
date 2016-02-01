@@ -62,7 +62,7 @@ ufixed_t q_uadd( ufixed_t a, ufixed_t b )
   ufixed_t result = a + b;
 
   // Check if an overflow occurred.
-  if ( a > UFIXED_MAX - b )
+  if ( a > ( ( 1 << FIXEDPOINT_SIZE ) - 1 ) - b )
   {
     error = OVERFLOW_OCCURRED_ERROR;
   }
@@ -157,7 +157,7 @@ ufixed_t q_umul( ufixed_t a, ufixed_t b )
   ufixed_temp_t result = ( (ufixed_temp_t)a * (ufixed_temp_t)b ) >> FBITS;
 
   // Check if an overflow occurred.
-  if ( result & UFIXED_MAX )
+  if ( result & ( ( 1 << FIXEDPOINT_SIZE ) - 1 ) )
   {
     error = OVERFLOW_OCCURRED_ERROR;
   }
@@ -177,6 +177,8 @@ sfixed_t q_smul( sfixed_t a, sfixed_t b )
   sfixed_temp_t result = ( (sfixed_temp_t)a * (sfixed_temp_t)b ) >> FBITS;
 
   // Check if an overflow occurred.
+  // TODO this is only valid if FIXEDPOINT_SIZE is of size
+  // uint8_t, uint16_t, or uint32_t.
   if ( result > SFIXED_MAX || result < SFIXED_MIN )
   {
     error = OVERFLOW_OCCURRED_ERROR;
